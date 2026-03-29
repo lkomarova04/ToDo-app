@@ -1,0 +1,7 @@
+.todo__clear-btn {
+    transition: color 0.2s ease-in;
+
+    &:hover {
+        color: #494C6B;
+    }
+}

@@ -1,0 +1,35 @@
+.header .container {
+    display: flex;          
+  justify-content: space-between; 
+  align-items: center;
+}
+
+.header__title {
+    color: white;
+    font-size: 40px;
+    font-weight: bold;
+    letter-spacing: 15px;
+}
+
+
+.header__theme-btn {
+  width: 25px;
+  height: 26px;
+  transition: transform 0.3s ease;
+
+  &:hover {
+    transform: rotate(20deg);
+  }
+
+}
+
+
+@media screen and (max-width: 450px) {
+      .header__title {
+        font-size: 20px ;
+      }
+      .header__theme-btn {
+        width: 19.32px;
+        height: 20px;
+      }
+}

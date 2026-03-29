@@ -1,0 +1,16 @@
+.todo__footer {
+    display: flex;
+
+    justify-content: space-between;
+    padding: 20px 24px; 
+    color: #9495A5;
+    font-size: 14px;
+    letter-spacing: -0.19px;
+}
+
+@media screen and (max-width: 450px) {
+    .todo__footer {
+          font-size: 12px;
+        letter-spacing: -0.17px;
+    }
+}

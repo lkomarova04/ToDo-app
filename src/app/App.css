@@ -1,0 +1,39 @@
+body {
+    background-color: #fafafa;
+    background-image: url('../assets/img/background_light.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    font-family: "Josefin Sans", sans-serif;
+    height: 300px;
+    transition: background-color 0.3s ease,
+   background-image 0.3s ease;
+
+}
+
+
+.container {
+  max-width: 700px;  
+  margin: 70px auto 0; 
+  padding: 0 20px;     
+}
+
+footer {
+  color: #9495A5;
+  margin-top: 49px ;
+  text-align: center;
+}
+
+
+@media screen and (max-width: 450px) {
+    body {
+      height: 200px;
+    }
+    .container {
+        max-width: 700px;
+        margin: 40px 24px 0;
+    }
+    footer {
+        font-size: 14px;
+
+    }
+}

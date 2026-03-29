@@ -1,0 +1,39 @@
+body.dark { 
+  background-image: url('../assets/img/backgroung-dark.jpg');
+  background-color: #171823;
+
+  
+
+  & .todo__list {
+    background-color: #25273D;
+    border: 1px solid #393A4B;
+  }
+
+  & .todo__items {
+    background-color: #25273D;
+    border: 1px solid #393A4B;
+  }
+
+  & .todo__items-btn {
+    background-image: url("../assets/img/checkbox-dark.png");
+    color:  #C8CBE7;
+  }
+
+  & .todo__items-btn:hover {
+        background-image: url("../assets/img/checkbox-active-dark.png") ;
+    }
+    & .todo__items-btn.completed {
+        background-image: url("../assets/img/checkbox-active.png") ;
+        color: #4D5067;
+    }
+
+  & .todo__filter-btn:hover {
+        color: #E3E4F1;
+    }
+}
+
+input {
+    background-color: #25273D;
+    background-image: url("../assets/img/checkbox-dark.png");
+    color: #C8CBE7;
+  }
