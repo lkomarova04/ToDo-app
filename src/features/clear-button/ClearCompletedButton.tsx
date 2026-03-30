@@ -1,13 +1,12 @@
+import { useTasksContext } from '@/entities/todo/model/useTaskContent'
 import './ClearCompleteButton.css'
 
-interface ClearCompleteButton{
-      onDeleteAllButtonClick: () => void
+const ClearCompleteButton = () => {
 
-}
-const ClearCompleteButton = ({onDeleteAllButtonClick} : ClearCompleteButton) => {
+    const {deleteAll} = useTasksContext()
     return (
         <button className="todo__clear-btn"
-        onClick={() => onDeleteAllButtonClick()}
+        onClick={() => deleteAll()}
         >Clear Complited</button>
     )
 }

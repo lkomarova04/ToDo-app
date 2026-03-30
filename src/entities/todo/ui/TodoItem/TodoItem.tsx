@@ -1,3 +1,4 @@
+import { useTasksContext } from '../../model/useTaskContent'
 import './TodoItems.css'
 import DeleteButton from '@/features/delete-task'
 
@@ -5,19 +6,19 @@ interface TodoItemProps {
   id: string,
   title: string,
   isDone: boolean,
-  onDeleteTaskButtonClick: (taskId: string) => void,
-  onToggleTaskButtonClick:(taskId: string, isDone: boolean) => void
 }
 
-const TodoItem= ({id, title, isDone, onDeleteTaskButtonClick, onToggleTaskButtonClick} : TodoItemProps) => {
+const TodoItem= ({id, title, isDone} : TodoItemProps) => {
+
+  const {deleteTask, toggleTask} = useTasksContext()
   const handleDelete = () => {
-    onDeleteTaskButtonClick(id)
+    deleteTask(id)
   }
     return (
         <li className="todo__items">
               <button id={id} 
               className={`todo__items-btn ${isDone ? 'completed' : ''}`}
-              onClick={() => onToggleTaskButtonClick(id, isDone)}
+              onClick={() => toggleTask(id)}
               >
                 {title}
               </button>

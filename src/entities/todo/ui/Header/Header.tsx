@@ -1,11 +1,12 @@
 import tonightBtn from '@/assets/img/tonight_btn.svg';
 import './header.css'
+import {memo} from 'react'
+import { useTasksContext } from '../../model/useTaskContent';
 
-interface HeaderProps {
-  toggleTheme: () => void
-}
 
-const Header = ({toggleTheme} : HeaderProps) => {
+const Header = () => {
+
+  const {toggleTheme} = useTasksContext()
     return (
         <header className="header">
       <div className="container">
@@ -22,4 +23,4 @@ const Header = ({toggleTheme} : HeaderProps) => {
     )
 }
 
-export default Header
+export default memo(Header)

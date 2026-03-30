@@ -1,16 +1,13 @@
  import React from 'react'
+ import { memo } from 'react'
  import './AddTaskForm.css'
+ import { useTasksContext } from '@/entities/todo/model/useTaskContent'
 
-
-interface AddTaskFormProps {
-  addTask: () => void;
-  newTaskTitle: string;
-  setNewTaskTitle: (title: string) => void
-}
-const AddTaskForm = ({addTask, newTaskTitle, setNewTaskTitle} : AddTaskFormProps) => {
+const AddTaskForm = () => {
+  const {addTask, newTaskTitle, setNewTaskTitle} = useTasksContext()
   const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
-    addTask()
+    addTask(newTaskTitle)
   }
     return (
         
@@ -31,4 +28,4 @@ const AddTaskForm = ({addTask, newTaskTitle, setNewTaskTitle} : AddTaskFormProps
     )
 }
 
-export default AddTaskForm
+export default memo(AddTaskForm)
