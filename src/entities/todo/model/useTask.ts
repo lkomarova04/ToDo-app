@@ -1,15 +1,27 @@
-import { useState, useEffect, useCallback, useMemo } from "react";
+import { useState, useCallback, useMemo, useEffect } from "react";
 import type { FilterType, Task } from "@/entities/todo/model/types/Task";
 import taskApi from "@/shared/api/taskAPI";
+import type { RootState, AppDispatch } from "@/app/store/store";
+import { useSelector, useDispatch } from "react-redux";
+import { addTask as addTaskAction, deleteTask as deleteTaskAction, toggleTask as toggleTaskAction, deleteAll as deleteAllTaskAction, setTask } from '@/entities/todo/model/tasksSlice';
 
 const useTasks = () => {
-  const [tasks, setTasks] = useState<Task[]>([]);
+  const tasks = useSelector((state: RootState) => state.tasks.tasks);
+  const dispatch = useDispatch<AppDispatch>();
   const [newTaskTitle, setNewTaskTitle] = useState("");
   const [filter, setFilter] = useState<FilterType>("all");
 
   useEffect(() => {
-    taskApi.getAll().then(setTasks);
-  }, []);
+    const fetchTasks = async () => {
+      try {
+        const data: Task[] = await taskApi.getAll();
+        dispatch(setTask(data));
+      } catch (err) {
+        console.error("Ошибка загрузки с сервера", err);
+      }
+    };
+    fetchTasks();
+  }, [dispatch]);
 
   const filteredTasks = useMemo(() => {
     return tasks.filter((task) => {
@@ -19,63 +31,64 @@ const useTasks = () => {
     });
   }, [tasks, filter]);
 
-  const deleteTask = useCallback((taskId: string) => {
-    taskApi.delete(taskId).then(() => {
-      setTasks((prev) => prev.filter((task) => task.id !== taskId));
-    });
-  }, []);
-
-  const toggleTask = useCallback((taskId: string) => {
-    setTasks((prev) =>
-      prev.map((task) => {
-        if (task.id === taskId) {
-          const newStatus = !task.isDone;
-          taskApi.toggleComplete(taskId, newStatus);
-          return { ...task, isDone: newStatus };
-        }
-        return task;
-      })
-    );
-  }, []);
-
-  const addTask = useCallback((title: string) => {
+  const addTask = useCallback(async (title: string) => {
     if (!title.trim()) return;
-
-    const newTask: Omit<Task, "id"> = {
-      title,
-      isDone: false,
-    };
-
-    taskApi.add(newTask).then((addedTask) => {
-      setTasks((prev) => [...prev, addedTask]);
+    const newTask: Omit<Task, "id"> = { title, isDone: false };
+    try {
+      const addedTask: Task = await taskApi.add(newTask);
+      dispatch(addTaskAction(addedTask));
       setNewTaskTitle("");
-    });
-  }, []);
-
-  const deleteAll = useCallback(() => {
-    if (confirm("Are you sure you want to delete all?")) {
-      setTasks((prev) => {
-        taskApi.deleteAll(prev);
-        return [];
-      });
+    } catch (err) {
+      console.error("Ошибка добавления задачи", err);
     }
-  }, []);
-;
+  }, [dispatch]);
 
-  const activeTasksCount = tasks.filter((task) => !task.isDone).length;
+  const toggleTask = useCallback(async (id: string) => {
+  const task = tasks.find(t => t.id === id);
+  if (!task) return;
+
+  dispatch(toggleTaskAction(id));
+
+  try {
+    await taskApi.toggleComplete(id, !task.isDone);
+  } catch (err) {
+    console.error("Ошибка toggle задачи", err);
+  }
+}, [dispatch, tasks]);
+
+  const deleteTask = useCallback(async (id: string) => {
+    dispatch(deleteTaskAction(id));
+    try {
+      await taskApi.delete(id);
+    } catch (err) {
+      console.error("Ошибка удаления задачи", err);
+    }
+  }, [dispatch]);
+
+  const deleteAll = useCallback(async () => {
+    if (!confirm("Вы уверены, что хотите удалить все задачи?")) return;
+    dispatch(deleteAllTaskAction());
+    try {
+      await taskApi.deleteAll(tasks);
+    } catch (err) {
+      console.error("Ошибка удаления всех задач", err);
+    }
+  }, [dispatch, tasks]);
+
+  const activeTasksCount = useMemo(() => tasks.filter((t) => !t.isDone).length, [tasks]);
 
   return {
     tasks,
-    filter,
     filteredTasks,
+    filter,
     setFilter,
-    deleteTask,
-    toggleTask,
-    addTask,
-    deleteAll,
-    activeTasksCount,
     newTaskTitle,
     setNewTaskTitle,
+    addTask,
+    toggleTask,
+    deleteTask,
+    deleteAll,
+    activeTasksCount,
   };
 };
 
